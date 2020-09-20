@@ -146,6 +146,15 @@ def _create_msd(
     _symlink(func_path, join(config_path, f"mass_storage.usb{instance}"))
 
 
+def _create_ecm(gadget_path: str, config_path: str, instance: int) -> None:
+    func_path = join(gadget_path, f"functions/ecm.usb{instance}")
+    _mkdir(func_path)
+    _write(join(func_path, "host_addr"), "4e:cb:30:80:07:f6")
+    _write(join(func_path, "dev_addr"), "b6:98:d7:51:fe:1b")
+
+    _symlink(func_path, join(config_path, f"ecm.usb{instance}"))
+
+
 def _cmd_start(config: Section) -> None:
     # https://www.kernel.org/doc/Documentation/usb/gadget_configfs.txt
     # https://www.isticktoit.net/?p=1383
@@ -193,6 +202,10 @@ def _cmd_start(config: Section) -> None:
             logger.info("Required MSD extra drives: %d", config.otg.drives.count)
             for instance in range(config.otg.drives.count):
                 _create_msd(gadget_path, config_path, instance + 1, "root", **config.otg.drives.default._unpack())  # pylint: disable=protected-access
+
+    if config.otg.ecm.enabled:
+        logger.info("Required ECM")
+        _create_ecm(gadget_path, config_path, 0)
 
     logger.info("Enabling the gadget ...")
     _write(join(gadget_path, "UDC"), udc)

@@ -91,6 +91,7 @@ from .api.atx import AtxApi
 from .api.msd import MsdApi
 from .api.streamer import StreamerApi
 from .api.export import ExportApi
+from .api.eth import EthApi
 
 
 # =====
@@ -147,6 +148,7 @@ class KvmdServer(HttpServer):  # pylint: disable=too-many-arguments,too-many-ins
         hid: BaseHid,
         atx: BaseAtx,
         msd: BaseMsd,
+        eth: BaseEth,
         streamer: Streamer,
         snapshoter: Snapshoter,
 
@@ -178,6 +180,7 @@ class KvmdServer(HttpServer):  # pylint: disable=too-many-arguments,too-many-ins
                 _Component("HID",          "hid_state",      hid),
                 _Component("ATX",          "atx_state",      atx),
                 _Component("MSD",          "msd_state",      msd),
+                _Component("ETH",          "eth_state",      eth),
                 _Component("Streamer",     "streamer_state", streamer),
             ],
         ]
@@ -192,6 +195,7 @@ class KvmdServer(HttpServer):  # pylint: disable=too-many-arguments,too-many-ins
             HidApi(hid, keymap_path),
             AtxApi(atx),
             MsdApi(msd, sync_chunk_size),
+            EthApi(eth)
             StreamerApi(streamer),
             ExportApi(info_manager, atx, user_gpio),
         ]

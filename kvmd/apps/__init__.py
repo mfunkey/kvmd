@@ -389,6 +389,10 @@ def _get_config_scheme() -> Dict:
                 "enabled": Option(False, type=valid_bool),
             },
 
+            "ecm": {
+                "enabled": Option(False, type=valid_bool),
+            },
+
             "drives": {
                 "enabled": Option(False, type=valid_bool),
                 "count":   Option(1,     type=valid_int_f1),
