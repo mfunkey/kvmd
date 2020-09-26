@@ -149,6 +149,7 @@ KEYMAP: Dict[str, Key] = {
     "Numpad0": Key(serial=SerialKey(code=103), otg=OtgKey(code=98, is_modifier=False)),
     "NumpadDecimal": Key(serial=SerialKey(code=104), otg=OtgKey(code=99, is_modifier=False)),
     "Power": Key(serial=SerialKey(code=105), otg=OtgKey(code=102, is_modifier=False)),
+    "IntlBackslash": Key(serial=SerialKey(code=106), otg=OtgKey(code=100, is_modifier=False)),
 }
 
 
@@ -298,6 +299,7 @@ X11_TO_AT1 = {
     65421: At1Key(code=57372, shift=False),  # XK_KP_Enter
     65508: At1Key(code=57373, shift=False),  # XK_Control_R
     65455: At1Key(code=57397, shift=False),  # XK_KP_Divide
+    65027: At1Key(code=57400, shift=False),  # XK_ISO_Level3_Shift
     65514: At1Key(code=57400, shift=False),  # XK_Alt_R
     65299: At1Key(code=57414, shift=False),  # XK_Pause
     65360: At1Key(code=57415, shift=False),  # XK_Home
@@ -402,6 +404,7 @@ AT1_TO_WEB = {
     82: "Numpad0",
     83: "NumpadDecimal",
     84: "PrintScreen",
+    86: "IntlBackslash",
     87: "F11",
     88: "F12",
     57372: "NumpadEnter",

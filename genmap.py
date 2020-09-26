@@ -33,6 +33,7 @@ from typing import Optional
 import Xlib.keysymdef.latin1
 import Xlib.keysymdef.miscellany
 import Xlib.keysymdef.xf86
+import Xlib.keysymdef.xkb
 
 import mako.template
 
@@ -74,6 +75,7 @@ def _resolve_keysym(name: str) -> int:
         Xlib.keysymdef.latin1,
         Xlib.keysymdef.miscellany,
         Xlib.keysymdef.xf86,
+        Xlib.keysymdef.xkb,
     ]:
         code = getattr(module, name, None)
         if code is not None:
@@ -84,7 +86,7 @@ def _resolve_keysym(name: str) -> int:
 
 def _parse_x11_names(names: str) -> Set[_X11Key]:
     keys: Set[_X11Key] = set()
-    for name in names.split(","):
+    for name in filter(None, names.split(",")):
         shift = name.startswith("^")
         name = (name[1:] if shift else name)
         code = _resolve_keysym(name)
@@ -118,7 +120,7 @@ def _read_keymap_csv(path: str) -> List[_KeyMapping]:
                     otg_key=_parse_otg_key(row["otg_key"]),
                     ps2_key=_parse_ps2_key(row["ps2_key"]),
                     at1_code=int(row["at1_code"], 16),
-                    x11_keys=_parse_x11_names(row["x11_names"]),
+                    x11_keys=_parse_x11_names(row["x11_names"] or ""),
                 ))
     return keymap
 
