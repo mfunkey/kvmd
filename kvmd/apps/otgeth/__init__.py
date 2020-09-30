@@ -22,6 +22,7 @@
 
 import os
 import argparse
+import time
 
 from typing import List
 from typing import Optional
@@ -34,26 +35,41 @@ from ...validators import ValidatorError
 
 
 # =====
+def _enable_nat() -> None:
+    get_logger().info("Adding NAT rules")
+    os.system("sudo sysctl -w net.ipv4.ip_forward=1")
+    os.system("sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE")
+    os.system("sudo iptables -A FORWARD -i usb0 -j ACCEPT")
+
+
+def _disable_nat() -> None:
+    os.system("sudo sysctl -w net.ipv4.ip_forward=0")
+    os.system("sudo iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE")
+    os.system("sudo iptables -D FORWARD -i usb0 -j ACCEPT")
+
+
 def _link_up() -> None:
     get_logger().info("Adding IP and Link Up on usb0")
-    os.system("ip link set usb0 up")
-    os.system("ip address add 194.168.1.1/24 dev usb0")
+    os.system("sudo ip link set usb0 up")
+    os.system("sudo ip address add 194.168.1.1/24 dev usb0")
 
 
 def _link_down() -> None:
     get_logger().info("Removing IP and Link Down on usb0")
-    os.system("ip address del 194.168.1.1/24 dev usb0")
-    os.system("ip link set usb0 down")
+    os.system("sudo ip address del 194.168.1.1/24 dev usb0")
+    os.system("sudo ip link set usb0 down")
 
 
 def _start_dnsmasq() -> None:
     get_logger().info("Starting dnsmasq on usb0")
-    os.system("dnsmasq --interface=usb0 --dhcp-range=194.168.1.2,194.168.1.2,255.255.255.252,1h --dhcp-option=3,194.168.1.1 --leasefile-ro")
+    os.system("sudo systemctl stop systemd-resolved")
+    time.sleep(1)
+    os.system("sudo dnsmasq --interface=usb0 --dhcp-range=194.168.1.2,194.168.1.2,255.255.255.252,1h --dhcp-option=3,194.168.1.1 --leasefile-ro")
 
 
 def _stop_dnsmasq() -> None:
     get_logger().info("Stopping dnsmasq on usb0")
-    os.system("killall dnsmasq")
+    os.system("sudo killall dnsmasq")
 
 
 # =====
@@ -61,6 +77,7 @@ def _cmd_start() -> None:
     logger = get_logger()
     _link_up()
     _start_dnsmasq()
+    _enable_nat()
     logger.info("Ready to work")
 
 
@@ -69,6 +86,7 @@ def _cmd_stop() -> None:
     logger = get_logger()
     _link_down()
     _stop_dnsmasq()
+    _disable_nat()
     logger.info("Bye-bye")
 
 

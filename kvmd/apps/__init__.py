@@ -313,6 +313,12 @@ def _get_config_scheme() -> Dict:
                 # Dynamic content
             },
 
+            "eth": {
+                "type": Option("", type=valid_stripped_string_not_empty),
+                "nat": Option(True, type=valid_bool)
+                # Dynamic content
+            },
+
             "streamer": {
                 "forever": Option(False, type=valid_bool),
 

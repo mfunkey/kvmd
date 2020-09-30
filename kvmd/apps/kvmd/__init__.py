@@ -28,6 +28,7 @@ from ...logging import get_logger
 from ...plugins.hid import get_hid_class
 from ...plugins.atx import get_atx_class
 from ...plugins.msd import get_msd_class
+from ...plugins.eth import get_eth_class
 
 from .. import init
 
@@ -83,6 +84,7 @@ def main(argv: Optional[List[str]]=None) -> None:
         hid=hid,
         atx=get_atx_class(config.atx.type)(**config.atx._unpack(ignore=["type"])),
         msd=get_msd_class(config.msd.type)(**msd_kwargs),
+        eth=get_eth_class(config.eth.type)(**config.eth._unpack(ignore=["type"])),
         streamer=streamer,
 
         snapshoter=Snapshoter(

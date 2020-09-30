@@ -58,6 +58,9 @@ class BaseEth(BasePlugin):
     async def on(self, wait: bool) -> None:
         raise NotImplementedError
 
+    async def ip(self, wait: bool) -> None:
+        raise NotImplementedError
+
     async def off(self, wait: bool) -> None:
         raise NotImplementedError
 
@@ -66,4 +69,4 @@ class BaseEth(BasePlugin):
 
 # =====
 def get_eth_class(name: str) -> Type[BaseEth]:
-    return get_plugin_class("Eth", name)  # type: ignore
+    return get_plugin_class("eth", name)  # type: ignore

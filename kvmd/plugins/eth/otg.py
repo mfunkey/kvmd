@@ -28,7 +28,6 @@ from typing import AsyncGenerator
 from ...logging import get_logger
 
 from ... import aiotools
-from ... import gpio
 
 from ...yamlconf import Option
 
@@ -45,26 +44,33 @@ from . import BaseEth
 # =====
 class Plugin(BaseEth):  # pylint: disable=too-many-instance-attributes
     def __init__(  # pylint: disable=too-many-arguments,super-init-not-called
-        
+        self,
+        nat: bool,      
     ) -> None:
+        self.__nat = nat
 
 
 
     @classmethod
     def get_plugin_options(cls) -> Dict:
         return {
-            "on":      Option(-1,    type=valid_gpio_pin),
-            "off":        Option(-1,    type=valid_gpio_pin),
+ #           "ip": Option(""),
+
         }
 
+
+    async def get_state(self) -> Dict:
+        return {
+            "enabled": True,
+            "online": True,
+            "nat": bool(self.__nat),
+        }
 
 
     # =====
 
-    async def on(self, wait: bool) -> None:
-        if not (await self.__get_power()):
-            await self.click_power(wait)
+    async def connect(self, wait: bool) -> None:
+        return
 
-    async def off(self, wait: bool) -> None:
-        if (await self.__get_power()):
-            await self.click_power(wait)
+    async def disconnect(self, wait: bool) -> None:
+        return

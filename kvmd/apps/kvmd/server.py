@@ -49,6 +49,7 @@ from ...plugins import BasePlugin
 from ...plugins.hid import BaseHid
 from ...plugins.atx import BaseAtx
 from ...plugins.msd import BaseMsd
+from ...plugins.eth import BaseEth
 
 from ...validators import ValidatorError
 
@@ -199,7 +200,7 @@ class KvmdServer(HttpServer):  # pylint: disable=too-many-arguments,too-many-ins
             HidApi(hid, keymap_path),
             AtxApi(atx),
             MsdApi(msd, sync_chunk_size),
-            EthApi(eth)
+            EthApi(eth),
             StreamerApi(streamer),
             ExportApi(info_manager, atx, user_gpio),
         ]
